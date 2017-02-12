@@ -51,24 +51,7 @@
     </style>
 
     <body>
-        <h1>Build-a-blog</h1>
-
-        <form method="post">
-            <label>
-                <div>Title:</div>
-                <input type="text" name="title" value="{{title}}">
-                <!--{{title}} passes in variable-->
-            </label>
-
-            <label>
-                <div>Blog:</div>
-                <textarea name="blog">{{blog}}</textarea>
-            </label>
-
-            <div class="error">{{error}}</div>
-            <input type="submit">
-
-        </form>
+        <h1>blog!</h1>
 
         <hr>
 
@@ -78,8 +61,6 @@
             <pre class="blog-body">{{blog.blog}}</pre>
         </div>
         {% endfor %}
-
-
 
 
     </body>

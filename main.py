@@ -30,39 +30,41 @@ class Index(Handler):
         t = jinja_env.get_template("index.html")
         self.render(t)
 
-
 class Blog(Handler):
-    def render_front(self, title="", blog="", error=""):
+    def render_blogs(self, title="", blog=""):
         blogs = db.GqlQuery("SELECT * FROM BlogPosts "
-                            "ORDER BY created DESC ") #stores query
+                            "ORDER BY created DESC "
+                            "LIMIT 5; ")
 
-        self.render("blog.html", title=title, blog=blog, error=error, blogs=blogs) #pass in variables so 
-                                                                #they can be used in the form
+        self.render("blog.html", title = title, blog = blog, blogs = blogs)
 
-    def get (self):
-        self.render_front()
+    def get(self):
+        self.render_blogs()
+
+class NewPost(Handler):
+    def render_form(self, title="", blog="", error=""):
+        self.render("newpost.html", title = title, blog = blog, error = error)
+
+    def get(self):
+        self.render_form()
 
     def post(self):
-        title=self.request.get("title")
-        blog=self.request.get("blog")
+        title = self.request.get("title")
+        blog = self.request.get("blog")
 
         if title and blog:
-            b = BlogPosts(title=title, blog=blog)#get blog object in success case
+            b = BlogPosts(title = title, blog = blog) #gets blog object in success case
             b.put() #stores new blog object in database
+            self.redirect("/blog") #send user to 'blog' in success case
 
-            self.redirect("/")#redirect back to empty form
         else:
             error="DOES NOT COMPUTE!!"
-            self.render_front(title, blog, error)#sends in error, title and blog
-
-#class NewPost(Handler):
-
-        #self.render("newpost.html", title=title, blogs=blogs) #pass in variables so 
-                                                                #they can be used in the form
-
+            self.render_form(title, blog, error) #renders form again
+                                                #w/ error message
 
 
 app = webapp2.WSGIApplication([
     ('/', Index),
-    ('/blog', Blog)
+    ('/blog', Blog),
+    ('/newpost', NewPost)
 ], debug=True)
