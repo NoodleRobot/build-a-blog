@@ -1,16 +1,22 @@
-        <form method="post">
-            <label>
-                <div>Title:</div>
-                <input type="text" name="title" value="{{title}}">
+{% extends "base.html" %}
+
+{% block content %}  
+
+    <form method="post">
+        
+        <label>
+            <div>Title:</div>
+            <input type="text" name="title" value="{{title}}">
                 <!--{{title}} passes in variable-->
-            </label>
+        </label>
 
-            <label>
-                <div>Blog:</div>
-                <textarea name="blog">{{blog}}</textarea>
-            </label>
-
+        <label>
+            <div>Blog:</div>
+            <textarea name="blog">{{blog}}</textarea>
+        </label>
             <div class="error">{{error}}</div>
             <input type="submit">
 
-        </form>
+    </form>
+
+{% endblock %}

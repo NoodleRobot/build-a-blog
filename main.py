@@ -22,8 +22,9 @@ class Handler(webapp2.RequestHandler):
 class BlogPosts(db.Model): #represent submission from user, inherits from db.model (creates entity)
     title = db.StringProperty(required = True)#tells google this is string type
     blog = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)#date stamps submission-look in docs for more
-
+    created = db.DateTimeProperty(auto_now_add = True)#auto datestamps submissions
+                                                    #when adding to db
+                                                    
 class Index(Handler):
     """Handles  requests coming into '/'  """
     def get(self):
