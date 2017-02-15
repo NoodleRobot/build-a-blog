@@ -22,14 +22,15 @@ class Handler(webapp2.RequestHandler):
 class BlogPosts(db.Model): #represent submission from user, inherits from db.model (creates entity)
     title = db.StringProperty(required = True)#tells google this is string type
     blog = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)#auto datestamps submissions
+    created = db.DateTimeProperty(auto_now_add = True)#auto date+time stamps submissions
                                                     #when adding to db
-                                                    
+
 class Index(Handler):
     """Handles  requests coming into '/'  """
     def get(self):
-        t = jinja_env.get_template("index.html")
-        self.render(t)
+        self.redirect('/blog') #auto redirect
+        #t = jinja_env.get_template("index.html") #option to display link
+        #self.render(t)
 
 class Blog(Handler):
     def render_blogs(self, title="", blog=""):
@@ -56,16 +57,43 @@ class NewPost(Handler):
         if title and blog:
             b = BlogPosts(title = title, blog = blog) #gets blog object in success case
             b.put() #stores new blog object in database
-            self.redirect("/blog") #send user to 'blog' in success case
+            self.redirect("/blog/" + str(b.key().id())) #send user to permalink in success case
 
         else:
-            error="DOES NOT COMPUTE!!"
+            error="OH NO, DOES NOT COMPUTE!! Please fill out both fields."
             self.render_form(title, blog, error) #renders form again
                                                 #w/ error message
+
+class ViewPostHandler(Handler):  
+
+    def get(self, id):
+        #single_post = BlogPosts.get_by_id(int(id))
+        #self.response.write(id)
+        #self.response.write(single_post)
+        #t = jinja_env.get_template('permalink.html')
+        #content = t.render(title = title, blog = blog) #'title' not defined...
+        #content = t.render(post_title = single_post.title, post = single_post.blog)
+        #self.response.write(content)
+
+        if id:
+            single_post = BlogPosts.get_by_id(int(id))
+            #self.response.write(type(single_post)
+            #self.render("permalink.html", title=title, blog=blog)
+            #self.render("permalink.html", title=single_post.title, blog=single_post.blog)
+            t=jinja_env.get_template("permalink.html")
+            content=t.render(title=title, blog=blog)
+            self.response.out.write(content)
+        else:
+            self.redirect('/blog')    
+
+        
+
+
 
 
 app = webapp2.WSGIApplication([
     ('/', Index),
     ('/blog', Blog),
-    ('/newpost', NewPost)
+    ('/newpost', NewPost),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 ], debug=True)
