@@ -13,6 +13,10 @@
                 margin: 0 auto;
                 padding: 10px;
             }
+            a:hover {
+                color: black;
+                ;
+            }
             .error {
                 color: red
             }
@@ -53,9 +57,15 @@
     </head>
 
     <body>
+        <nav>
+            <a href="/blog">home</a> 
+            <a href="/newpost">new post</a>
+        </nav>
+        
+        <hr>
         <h1>build-a-blog!</h1>
         <hr>
-        
+
         {% block content %}
         {% endblock %}
 

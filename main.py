@@ -8,11 +8,6 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                 autoescape = True)
 
-#def get_posts(limit, offset):
-#    posts = db.GqlQuery('SELECT * FROM BlogPosts2 \
-#                        ORDER BY created DESC \
-#                        LIMIT ' + str(limit) + 'OFFSET' + str(offset))
-#    return posts
 
 class MainHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -59,7 +54,7 @@ class NewPost(MainHandler):
         if title and post: 
             p = BlogPosts2(title = title, post = post)
             p.put()
-            self.redirect('/blog')
+            self.redirect('/blog/' + str(p.key().id()))
 
         else: 
             error="Whoops! Please fill out both fields."
